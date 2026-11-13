@@ -1,0 +1,10 @@
+{
+  "name": "com.adrian.shared",
+  "version": "0.1.0",
+  "displayName": "Shared",
+  "description": "Common code shared across my Unity projects.",
+  "unity": "6000.0",
+  "author": {
+    "name": "Adrian Plapamaru"
+  }
+}

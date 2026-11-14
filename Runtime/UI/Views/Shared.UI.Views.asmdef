@@ -1,0 +1,33 @@
+{
+    "name": "Shared.UI.Views",
+    "rootNamespace": "com.Plapamaru.Shared.UI",
+    "references": [
+        "Shared",
+        "Shared.UI",
+        "UnityEngine.UI",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "SHARED_UGUI",
+        "SHARED_UNITASK"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.ugui",
+            "expression": "1.0.0",
+            "define": "SHARED_UGUI"
+        },
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "2.0.0",
+            "define": "SHARED_UNITASK"
+        }
+    ],
+    "noEngineReferences": false
+}

@@ -6,8 +6,9 @@ Reusable Unity code shared across my projects. Lives in its own repo (github.com
 
 - One folder per module: `Runtime/<Module>/`, namespace `com.Plapamaru.Shared.<Module>`.
 - Core assembly `Shared` (`Runtime/Shared.asmdef`) has **no** third-party or optional-package references. Anything needing UniTask, Newtonsoft, DOTween, uGUI or the Input System gets its own small asmdef (e.g. `Shared.UniTask`) inside its module folder.
-- Editor-only code goes under `Editor/` (assembly `Shared.Editor`).
+- Editor-only code goes under `Editor/<Module>/` (assembly `Shared.Editor`) and uses the module's namespace — never a `...Shared.Editor` namespace, it would shadow `UnityEditor.Editor`. Editor-only members of runtime components stay in the runtime file under `#if UNITY_EDITOR` so game code can still call them.
 - Commit the `.meta` files Unity generates; projects rely on their GUIDs.
+- Components that old projects have on scenes/prefabs: reuse the old script GUID in the new `.meta` (check `grep guid <old>.cs.meta`) and keep renamed fields readable with `[FormerlySerializedAs("oldName")]`, so references and values survive migration.
 - Update the module list in `README.md` when adding a module.
 
 ## Code style
@@ -34,7 +35,7 @@ Sources are the sibling repos in the same GitHub folder: `townbuilder/Assets/Plu
 - [x] Debugging (`GizmosController` draw calls are `[Conditional("UNITY_EDITOR")]`, stripped from builds)
 - [ ] UI — `MouseIsOverUI` (held back from Utilities: needs uGUI + Input System), `ButtonExtensions.SetExclusiveListener`, `ImageExtensions.SetAlpha` (widen to `Graphic`). Own asmdef `Shared.UI`, compiled only when `com.unity.ugui` is installed (`versionDefines` + `defineConstraints`)
 - [x] Haptics (native symbol renamed `PlapamaruHaptics_Impact` so it can't clash with an old project's own `.mm`; `.mm` is iOS-only in its `.meta`; host project must declare the Android `VIBRATE` permission; not yet tested on a device)
-- [ ] Mesh tools — townbuilder `MeshUtils/` (`MeshUtils.cs` depends on paid MantisLOD → split it out)
+- [x] Mesh tools (`MeshCombiner`/`MeshPivotChanger` keep their old script GUIDs — lanes has `MeshCombiner` on 29 prefabs/scenes; MantisLOD "Vertices Reduction" dropped, paid asset)
 - [ ] Editor tools — `EditorCoroutine`, `SceneCameraSaverAuto`, `SceneGameViewResolution`
 - [ ] Screenshots — lanes `ScreenshotTaker/`
 - [ ] Optional add-ons — `UniTaskUtils`, `JsonExtensions`

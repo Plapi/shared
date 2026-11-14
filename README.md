@@ -19,6 +19,7 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 ## Layout
 
 - `Runtime/` – game code (assembly `Shared`), one folder per module, namespace `com.Plapamaru.Shared.<Module>`
+- `Editor/` – editor-only code (assembly `Shared.Editor`), same module folders and namespaces
 
 ## Modules
 
@@ -28,5 +29,6 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 - `Pooling` – `PoolManager` (static `Get`/`Release` by prefab or registered id, prewarm, edit-mode fallback), `IPoolable` spawn/despawn callbacks
 - `Debugging` – `GizmosController` (persistent gizmos by id, editor-only calls), `DebugFPS` on-screen counter
 - `Haptics` – `HapticFeedback.VibrateHaptic(type)` for iOS (native plugin) and Android. Android needs `<uses-permission android:name="android.permission.VIBRATE"/>` in the project's manifest
+- `MeshTools` – `MeshUtils` (combine by material, extract sub-mesh, re-pivot, bake materials into one), `MeshCombiner` and `MeshPivotChanger` components that save the result as mesh + prefab assets
 
 Commit the `.meta` files Unity generates; other projects rely on their GUIDs.

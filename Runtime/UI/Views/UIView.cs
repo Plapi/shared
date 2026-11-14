@@ -203,11 +203,11 @@ namespace com.Plapamaru.Shared.UI
 
     public abstract class UIView<TData> : UIView
     {
-        protected TData Data { get; private set; }
+        protected TData Model { get; private set; }
 
         public UIView<TData> Init(TData data)
         {
-            Data = data;
+            Model = data;
             OnInit();
             return this;
         }

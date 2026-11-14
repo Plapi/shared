@@ -1,14 +1,11 @@
 using System.Collections.Generic;
+using com.Plapamaru.Shared.Extensions;
 using UnityEngine;
 
 namespace com.Plapamaru.Shared.Utilities
 {
     public static class GeometryUtils
     {
-        public static Vector2 ToXZ(Vector3 v) => new Vector2(v.x, v.z);
-
-        public static Vector3 FromXZ(Vector2 v, float y = 0f) => new Vector3(v.x, y, v.y);
-
         public static float DistancePointLine2D(Vector2 point, Vector2 lineStart, Vector2 lineEnd)
         {
             return (ProjectPointLine2D(point, lineStart, lineEnd) - point).magnitude;
@@ -119,10 +116,10 @@ namespace com.Plapamaru.Shared.Utilities
 
         public static Vector3 GetNearestPointsXZ(Vector3 p0, Vector3 p1, Vector3 target, Vector3 dir, out Vector3 leftPoint, out Vector3 rightPoint)
         {
-            Vector2 point = GetNearestPoints(ToXZ(p0), ToXZ(p1), ToXZ(target), ToXZ(dir), out Vector2 left, out Vector2 right);
-            leftPoint = FromXZ(left);
-            rightPoint = FromXZ(right);
-            return FromXZ(point);
+            Vector2 point = GetNearestPoints(p0.ToXZ(), p1.ToXZ(), target.ToXZ(), dir.ToXZ(), out Vector2 left, out Vector2 right);
+            leftPoint = left.XZToVector3();
+            rightPoint = right.XZToVector3();
+            return point.XZToVector3();
         }
 
         public static Vector2 GetNearestPoints(Vector2 p0, Vector2 p1, Vector2 target, Vector2 dir, out Vector2 leftPoint, out Vector2 rightPoint)
@@ -166,14 +163,14 @@ namespace com.Plapamaru.Shared.Utilities
 
         public static Vector3 KeepOnSideXZ(Vector3 point, Vector3 direction, Vector3 target)
         {
-            Vector2 dir = ToXZ(direction).normalized;
+            Vector2 dir = direction.ToXZ().normalized;
             Vector2 perpendicular = new Vector2(-dir.y, dir.x);
-            Vector2 pointToTarget = ToXZ(target - point);
+            Vector2 pointToTarget = (target - point).ToXZ();
             if (Vector2.Dot(pointToTarget, perpendicular) > 0)
                 return target;
 
             float t = Vector2.Dot(pointToTarget, dir);
-            return FromXZ(ToXZ(point) + t * dir);
+            return (point.ToXZ() + t * dir).XZToVector3();
         }
 
         public static Vector3 ClampDirection(Vector3 direction, Vector3 boundA, Vector3 boundB)

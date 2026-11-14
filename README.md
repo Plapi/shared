@@ -24,5 +24,6 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 
 - `Singletons` – `Singleton<T>`, `MonoBehaviourSingleton<T>`, `ScriptableObjectSingleton<T>`
 - `Utilities` – `Bezier`, `Chaikin`, `GeometryUtils`, `RandomUtils`, `EnumUtils`, `StringUtils`, `GizmoUtils`, `Timer`, `PosAndRot`, `SerializedDateTime`
+- `Extensions` – `Transform`, `GameObject`, `RectTransform`, `MonoBehaviour` (coroutine helpers), `Vector` extensions
 
 Commit the `.meta` files Unity generates; other projects rely on their GUIDs.

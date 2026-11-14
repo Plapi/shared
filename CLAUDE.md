@@ -29,10 +29,10 @@ Sources are the sibling repos in the same GitHub folder: `townbuilder/Assets/Plu
 
 - [x] Singletons
 - [x] Utilities (from `Utils/`; `Utils.cs` split into Random/Enum/String/Gizmo/GeometryUtils)
-- [ ] Extensions — townbuilder `Utils/Extensions/` (drop stray `using Unity.VisualScripting`; `ToVector2/ToVector3` overlap `GeometryUtils.ToXZ/FromXZ`; `ButtonExtensions`/`ImageExtensions` need uGUI → separate asmdef; `JsonExtensions` needs Newtonsoft → separate asmdef)
+- [x] Extensions (core only; `ToVector2/ToVector3` became `ToXZ/XZToVector3`, `IterateAllChildren` became `ForEachInHierarchy`)
 - [ ] Pooling — townbuilder `ObjectPoolingSystem/` (uses Singletons)
 - [ ] Debugging — `GizmosController`, `DebugFPS`
-- [ ] UI — `MouseIsOverUI` (held back from Utilities: needs uGUI + Input System)
+- [ ] UI — `MouseIsOverUI` (held back from Utilities: needs uGUI + Input System), `ButtonExtensions.SetExclusiveListener`, `ImageExtensions.SetAlpha` (widen to `Graphic`). Own asmdef `Shared.UI`, compiled only when `com.unity.ugui` is installed (`versionDefines` + `defineConstraints`)
 - [ ] Haptics — `HapticFeedback.cs` + `iOS/HapticFeedback.mm`
 - [ ] Mesh tools — townbuilder `MeshUtils/` (`MeshUtils.cs` depends on paid MantisLOD → split it out)
 - [ ] Editor tools — `EditorCoroutine`, `SceneCameraSaverAuto`, `SceneGameViewResolution`

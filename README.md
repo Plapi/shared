@@ -18,6 +18,11 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 
 ## Layout
 
-- `Runtime/` – game code (assembly `Shared`)
+- `Runtime/` – game code (assembly `Shared`), one folder per module, namespace `com.Plapamaru.Shared.<Module>`
+
+## Modules
+
+- `Singletons` – `Singleton<T>`, `MonoBehaviourSingleton<T>`, `ScriptableObjectSingleton<T>`
+- `Utilities` – `Bezier`, `Chaikin`, `GeometryUtils`, `RandomUtils`, `EnumUtils`, `StringUtils`, `GizmoUtils`, `Timer`, `PosAndRot`, `SerializedDateTime`
 
 Commit the `.meta` files Unity generates; other projects rely on their GUIDs.

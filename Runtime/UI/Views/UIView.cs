@@ -35,7 +35,7 @@ namespace com.Plapamaru.Shared.UI
                 return UniTask.CompletedTask;
 
             if (State != UIViewState.Showing || !animate)
-                _pending = RunShow(animate, RestartTransition()).Preserve();
+                _pending = Share(RunShow(animate, RestartTransition()));
 
             return _pending.AttachExternalCancellation(cancellationToken);
         }
@@ -51,7 +51,7 @@ namespace com.Plapamaru.Shared.UI
                 return UniTask.CompletedTask;
 
             if (State != UIViewState.Hiding || !animate)
-                _pending = RunHide(animate, RestartTransition()).Preserve();
+                _pending = Share(RunHide(animate, RestartTransition()));
 
             return _pending.AttachExternalCancellation(cancellationToken);
         }
@@ -181,6 +181,30 @@ namespace com.Plapamaru.Shared.UI
             State = UIViewState.Hidden;
             OnHidden();
             Hidden?.Invoke();
+        }
+
+        private static UniTask Share(UniTask task)
+        {
+            var source = new UniTaskCompletionSource();
+            Complete(task, source).Forget();
+            return source.Task;
+        }
+
+        private static async UniTaskVoid Complete(UniTask task, UniTaskCompletionSource source)
+        {
+            try
+            {
+                await task;
+                source.TrySetResult();
+            }
+            catch (OperationCanceledException exception)
+            {
+                source.TrySetCanceled(exception.CancellationToken);
+            }
+            catch (Exception exception)
+            {
+                source.TrySetException(exception);
+            }
         }
 
         private CancellationToken RestartTransition()

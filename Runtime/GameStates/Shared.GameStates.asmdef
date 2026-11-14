@@ -1,0 +1,26 @@
+{
+    "name": "Shared.GameStates",
+    "rootNamespace": "com.Plapamaru.Shared.GameStates",
+    "references": [
+        "Shared",
+        "Shared.UniTask",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "SHARED_UNITASK"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "2.0.0",
+            "define": "SHARED_UNITASK"
+        }
+    ],
+    "noEngineReferences": false
+}

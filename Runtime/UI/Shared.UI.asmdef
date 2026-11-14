@@ -1,0 +1,31 @@
+{
+    "name": "Shared.UI",
+    "rootNamespace": "com.Plapamaru.Shared.UI",
+    "references": [
+        "Shared",
+        "UnityEngine.UI",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "SHARED_UGUI"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.ugui",
+            "expression": "1.0.0",
+            "define": "SHARED_UGUI"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.0.0",
+            "define": "SHARED_INPUT_SYSTEM"
+        }
+    ],
+    "noEngineReferences": false
+}

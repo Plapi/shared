@@ -31,6 +31,7 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 - `Haptics` – `HapticFeedback.VibrateHaptic(type)` for iOS (native plugin) and Android. Android needs `<uses-permission android:name="android.permission.VIBRATE"/>` in the project's manifest
 - `MeshTools` – `MeshUtils` (combine by material, extract sub-mesh, re-pivot, bake materials into one), `MeshCombiner` and `MeshPivotChanger` components that save the result as mesh + prefab assets
 - `Screenshots` – `ScreenshotUtility.Capture/CapturePng` (camera to texture, optional transparent background), `ScreenshotTaker` component (saves PNG assets with an optional import preset), Tools > Shared > Take Game View Screenshot (Cmd/Ctrl+K, saved to Desktop)
+- `UI` (assembly `Shared.UI`, only compiled when uGUI is installed) – `UIUtils.IsPointerOverUI()` (Input System or legacy input), `Button.SetExclusiveListener`, `Graphic.SetAlpha`
 - `EditorTools` (editor only) – `EditorCoroutine` (nested routines, `WaitForSeconds`), `SceneCameraSaverAuto` (remembers the Scene view camera per scene; toggle in Tools > Shared), `SceneGameViewResolutionSettings` (Game view resolution per scene; create via Create > Shared)
 
 Commit the `.meta` files Unity generates; other projects rely on their GUIDs.

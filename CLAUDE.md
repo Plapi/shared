@@ -37,7 +37,7 @@ Sources are the sibling repos in the same GitHub folder: `townbuilder/Assets/Plu
 - [x] Haptics (native symbol renamed `PlapamaruHaptics_Impact` so it can't clash with an old project's own `.mm`; `.mm` is iOS-only in its `.meta`; host project must declare the Android `VIBRATE` permission; not yet tested on a device)
 - [x] Mesh tools (`MeshCombiner`/`MeshPivotChanger` keep their old script GUIDs — lanes has `MeshCombiner` on 29 prefabs/scenes; MantisLOD "Vertices Reduction" dropped, paid asset)
 - [x] Editor tools (`Editor/EditorTools/`; `SceneGameViewResolutionSettings.cs` keeps the old script GUID so townbuilder's settings asset still loads; Game view resolution uses Unity internals via reflection — verified on 6000.6, failures only log a warning)
-- [ ] Screenshots — lanes `ScreenshotTaker/`
+- [x] Screenshots (base is townbuilder `Scripts/ScreenshotTaker/ScreenshotTaker.cs`, keeps its GUID; the duplicated `DebugWindow` "Take Screenshot %k" menu moved here; lanes `DriversScreenshotTaker` stays in lanes — game-specific)
 - [ ] Optional add-ons — `UniTaskUtils`, `JsonExtensions`
 
 Never import: paid Asset Store code (OSA, MantisLOD), vendored third-party libs (DOTween, UniTask, JsonFX, ParticleEffectForUGUI — use UPM/Asset Store per project), per-game platform files (Android templates, Tenjin SDK).

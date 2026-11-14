@@ -26,5 +26,6 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 - `Utilities` – `Bezier`, `Chaikin`, `GeometryUtils`, `RandomUtils`, `EnumUtils`, `StringUtils`, `GizmoUtils`, `Timer`, `PosAndRot`, `SerializedDateTime`
 - `Extensions` – `Transform`, `GameObject`, `RectTransform`, `MonoBehaviour` (coroutine helpers), `Vector` extensions
 - `Pooling` – `PoolManager` (static `Get`/`Release` by prefab or registered id, prewarm, edit-mode fallback), `IPoolable` spawn/despawn callbacks
+- `Debugging` – `GizmosController` (persistent gizmos by id, editor-only calls), `DebugFPS` on-screen counter
 
 Commit the `.meta` files Unity generates; other projects rely on their GUIDs.

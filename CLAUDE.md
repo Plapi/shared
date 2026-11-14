@@ -31,7 +31,7 @@ Sources are the sibling repos in the same GitHub folder: `townbuilder/Assets/Plu
 - [x] Utilities (from `Utils/`; `Utils.cs` split into Random/Enum/String/Gizmo/GeometryUtils)
 - [x] Extensions (core only; `ToVector2/ToVector3` became `ToXZ/XZToVector3`, `IterateAllChildren` became `ForEachInHierarchy`)
 - [x] Pooling (merged townbuilder `ObjectPoolingSystem` id registry + lanes `ObjectPoolManager` prefab-keyed lazy pools into `PoolManager`; no interface needed to be poolable)
-- [ ] Debugging — `GizmosController`, `DebugFPS`
+- [x] Debugging (`GizmosController` draw calls are `[Conditional("UNITY_EDITOR")]`, stripped from builds)
 - [ ] UI — `MouseIsOverUI` (held back from Utilities: needs uGUI + Input System), `ButtonExtensions.SetExclusiveListener`, `ImageExtensions.SetAlpha` (widen to `Graphic`). Own asmdef `Shared.UI`, compiled only when `com.unity.ugui` is installed (`versionDefines` + `defineConstraints`)
 - [ ] Haptics — `HapticFeedback.cs` + `iOS/HapticFeedback.mm`
 - [ ] Mesh tools — townbuilder `MeshUtils/` (`MeshUtils.cs` depends on paid MantisLOD → split it out)

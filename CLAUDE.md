@@ -38,6 +38,8 @@ Sources are the sibling repos in the same GitHub folder: `townbuilder/Assets/Plu
 - [x] Mesh tools (`MeshCombiner`/`MeshPivotChanger` keep their old script GUIDs — lanes has `MeshCombiner` on 29 prefabs/scenes; MantisLOD "Vertices Reduction" dropped, paid asset)
 - [x] Editor tools (`Editor/EditorTools/`; `SceneGameViewResolutionSettings.cs` keeps the old script GUID so townbuilder's settings asset still loads; Game view resolution uses Unity internals via reflection — verified on 6000.6, failures only log a warning)
 - [x] Screenshots (base is townbuilder `Scripts/ScreenshotTaker/ScreenshotTaker.cs`, keeps its GUID; the duplicated `DebugWindow` "Take Screenshot %k" menu moved here; lanes `DriversScreenshotTaker` stays in lanes — game-specific)
-- [ ] Optional add-ons — `UniTaskUtils`, `JsonExtensions`
+- [x] Optional add-ons: `Runtime/Async` (`Shared.UniTask`, class `UniTaskRace`) and `Runtime/Serialization` (`Shared.Json`, `JsonExtensions`). Each compiles only when its package is installed. `versionDefines` only see UPM packages, so UniTask must come from UPM (`com.cysharp.unitask` git URL), not copied into `Assets/`. townbuilder's vendored UniTask has two custom patches (`UniTask.WhenFirst`, `Cysharp.Threading.Tasks.UniTaskUtils`) that `UniTaskRace` replaces. Newtonsoft often arrives as a dependency of other packages (it does in lanes-rush)
+
+All modules from the old projects are imported.
 
 Never import: paid Asset Store code (OSA, MantisLOD), vendored third-party libs (DOTween, UniTask, JsonFX, ParticleEffectForUGUI — use UPM/Asset Store per project), per-game platform files (Android templates, Tenjin SDK).

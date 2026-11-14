@@ -1,0 +1,25 @@
+{
+    "name": "Shared.UniTask",
+    "rootNamespace": "com.Plapamaru.Shared.Async",
+    "references": [
+        "Shared",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "SHARED_UNITASK"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "2.0.0",
+            "define": "SHARED_UNITASK"
+        }
+    ],
+    "noEngineReferences": false
+}

@@ -36,7 +36,7 @@ Sources are the sibling repos in the same GitHub folder: `townbuilder/Assets/Plu
 - [ ] UI — `MouseIsOverUI` (held back from Utilities: needs uGUI + Input System), `ButtonExtensions.SetExclusiveListener`, `ImageExtensions.SetAlpha` (widen to `Graphic`). Own asmdef `Shared.UI`, compiled only when `com.unity.ugui` is installed (`versionDefines` + `defineConstraints`)
 - [x] Haptics (native symbol renamed `PlapamaruHaptics_Impact` so it can't clash with an old project's own `.mm`; `.mm` is iOS-only in its `.meta`; host project must declare the Android `VIBRATE` permission; not yet tested on a device)
 - [x] Mesh tools (`MeshCombiner`/`MeshPivotChanger` keep their old script GUIDs — lanes has `MeshCombiner` on 29 prefabs/scenes; MantisLOD "Vertices Reduction" dropped, paid asset)
-- [ ] Editor tools — `EditorCoroutine`, `SceneCameraSaverAuto`, `SceneGameViewResolution`
+- [x] Editor tools (`Editor/EditorTools/`; `SceneGameViewResolutionSettings.cs` keeps the old script GUID so townbuilder's settings asset still loads; Game view resolution uses Unity internals via reflection — verified on 6000.6, failures only log a warning)
 - [ ] Screenshots — lanes `ScreenshotTaker/`
 - [ ] Optional add-ons — `UniTaskUtils`, `JsonExtensions`
 

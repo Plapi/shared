@@ -19,6 +19,5 @@ Read-only, via the Package Manager (`Packages/manifest.json`):
 ## Layout
 
 - `Runtime/` – game code (assembly `Shared`)
-- `Editor/` – editor-only tools (assembly `Shared.Editor`)
 
 Commit the `.meta` files Unity generates; other projects rely on their GUIDs.

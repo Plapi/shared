@@ -9,11 +9,11 @@ namespace com.Plapamaru.Shared.UI
     {
         [SerializeField] private Canvas _canvas;
 
-        private readonly Dictionary<Type, UIView> _views = new Dictionary<Type, UIView>();
-        private readonly List<UIView> _popups = new List<UIView>();
+        private readonly Dictionary<Type, UIView> _viewsByType =new Dictionary<Type, UIView>();
+        private readonly List<UIView> _viewStack = new List<UIView>();
 
         public Vector2 CanvasSize => ((RectTransform)Canvas.rootCanvas.transform).rect.size;
-        public UIView TopPopup => _popups.Count > 0 ? _popups[^1] : null;
+        public UIView TopView => _viewStack.Count > 0 ? _viewStack[^1] : null;
 
         private Canvas Canvas
         {
@@ -39,29 +39,29 @@ namespace com.Plapamaru.Shared.UI
         public void Register(UIView view)
         {
             var type = view.GetType();
-            if (_views.TryGetValue(type, out var existing))
+            if (_viewsByType.TryGetValue(type, out var existing))
             {
                 if (existing != view)
                     Debug.LogError($"{type.Name} is already registered on '{existing.name}'. Ignoring '{view.name}'.", view);
                 return;
             }
 
-            _views.Add(type, view);
+            _viewsByType.Add(type, view);
             view.Attach(this);
         }
 
         public void Unregister(UIView view)
         {
-            if (_views.TryGetValue(view.GetType(), out var existing) && existing == view)
-                _views.Remove(view.GetType());
+            if (_viewsByType.TryGetValue(view.GetType(), out var existing) && existing == view)
+                _viewsByType.Remove(view.GetType());
 
-            _popups.Remove(view);
+            _viewStack.Remove(view);
             view.Detach();
         }
 
         public T Get<T>() where T : UIView
         {
-            if (_views.TryGetValue(typeof(T), out var view))
+            if (_viewsByType.TryGetValue(typeof(T), out var view))
                 return (T)view;
 
             throw new KeyNotFoundException($"No {typeof(T).Name} is registered with {nameof(UIManager)}.");
@@ -69,7 +69,7 @@ namespace com.Plapamaru.Shared.UI
 
         public bool TryGet<T>(out T view) where T : UIView
         {
-            if (_views.TryGetValue(typeof(T), out var found))
+            if (_viewsByType.TryGetValue(typeof(T), out var found))
             {
                 view = (T)found;
                 return true;
@@ -81,7 +81,7 @@ namespace com.Plapamaru.Shared.UI
 
         public bool HandleBack()
         {
-            var top = TopPopup;
+            var top = TopView;
             if (top == null)
                 return false;
 
@@ -89,15 +89,15 @@ namespace com.Plapamaru.Shared.UI
             return true;
         }
 
-        internal void AddPopup(UIView view)
+        internal void PushToStack(UIView view)
         {
-            _popups.Remove(view);
-            _popups.Add(view);
+            _viewStack.Remove(view);
+            _viewStack.Add(view);
         }
 
-        internal void RemovePopup(UIView view)
+        internal void RemoveFromStack(UIView view)
         {
-            _popups.Remove(view);
+            _viewStack.Remove(view);
         }
     }
 }

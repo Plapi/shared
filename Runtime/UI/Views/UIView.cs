@@ -10,7 +10,7 @@ namespace com.Plapamaru.Shared.UI
     {
         [SerializeField] private UITransition _transition;
         [SerializeField] private Button[] _closeButtons = Array.Empty<Button>();
-        [SerializeField] private bool _isPopup;
+        [SerializeField] private bool _useViewStack;
         [SerializeField] private bool _startVisible;
 
         private UIManager _manager;
@@ -19,7 +19,7 @@ namespace com.Plapamaru.Shared.UI
 
         public UIViewState State { get; private set; } = UIViewState.Hidden;
         public bool IsVisible => State == UIViewState.Showing || State == UIViewState.Shown;
-        public bool IsPopup => _isPopup;
+        public bool UsesViewStack => _useViewStack;
 
         public event Action Shown;
         public event Action Hidden;
@@ -109,8 +109,8 @@ namespace com.Plapamaru.Shared.UI
                 if (_transition != null)
                     _transition.SetShown();
                 gameObject.SetActive(true);
-                if (_isPopup)
-                    _manager.AddPopup(this);
+                if (_useViewStack)
+                    _manager.PushToStack(this);
             }
             else
             {
@@ -133,8 +133,8 @@ namespace com.Plapamaru.Shared.UI
 
             State = UIViewState.Showing;
 
-            if (_isPopup && _manager != null)
-                _manager.AddPopup(this);
+            if (_useViewStack && _manager != null)
+                _manager.PushToStack(this);
 
             if (wasHidden && _transition != null)
                 _transition.SetHidden();
@@ -166,7 +166,7 @@ namespace com.Plapamaru.Shared.UI
             State = UIViewState.Hiding;
 
             if (_manager != null)
-                _manager.RemovePopup(this);
+                _manager.RemoveFromStack(this);
 
             if (wasShowing)
                 OnHide();

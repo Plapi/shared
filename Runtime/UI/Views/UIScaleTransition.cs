@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace com.Plapamaru.Shared.UI
 {
-    public class UIPopupTransition : UITransition
+    public class UIScaleTransition : UITransition
     {
         [SerializeField] private Graphic _background;
         [SerializeField] private CanvasGroup _content;

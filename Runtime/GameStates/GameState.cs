@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
@@ -5,7 +6,14 @@ namespace com.Plapamaru.Shared.GameStates
 {
     public abstract class GameState : GameStateBase
     {
-        protected abstract UniTask OnRun(CancellationToken cancellationToken);
+        protected virtual UniTask OnRun(CancellationToken cancellationToken)
+        {
+            var handlers = Handlers;
+            if (handlers == null)
+                throw new InvalidOperationException($"{this} must override {nameof(OnRun)} or {nameof(Handlers)}.");
+
+            return RunLoop(cancellationToken, handlers);
+        }
 
         internal override UniTask Run(CancellationToken cancellationToken)
         {

@@ -7,41 +7,24 @@ namespace com.Plapamaru.Shared.Async
 {
     public static class UniTaskRace
     {
-        public static async UniTask<THandler> Race<THandler>(
-            IEnumerable<KeyValuePair<Func<CancellationToken, UniTask>, THandler>> raceTasks,
+        public static async UniTask<T> Race<T>(
+            IReadOnlyList<T> entries,
+            Func<T, CancellationToken, UniTask> wait,
             CancellationToken cancellationToken)
         {
             using var raceCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            List<(UniTask task, THandler handler)> tasks = CreateRaceTasks(raceTasks, raceCts.Token);
-            return await WhenFirst(tasks, raceCts);
-        }
-
-        public static List<(UniTask task, THandler handler)> CreateRaceTasks<THandler>(
-            IEnumerable<KeyValuePair<Func<CancellationToken, UniTask>, THandler>> raceTasks,
-            CancellationToken cancellationToken)
-        {
-            var tasks = new List<(UniTask task, THandler handler)>();
-            foreach (KeyValuePair<Func<CancellationToken, UniTask>, THandler> pair in raceTasks)
-                tasks.Add((pair.Key(cancellationToken), pair.Value));
-            return tasks;
-        }
-
-        public static async UniTask<THandler> WhenFirst<THandler>(
-            IReadOnlyList<(UniTask task, THandler handler)> tasks,
-            CancellationTokenSource raceCancellationTokenSource)
-        {
-            var array = new UniTask[tasks.Count];
-            for (int i = 0; i < array.Length; i++)
-                array[i] = tasks[i].task;
-
+            var tasks = new UniTask[entries.Count];
             try
             {
-                int winner = await UniTask.WhenAny(array);
-                return tasks[winner].handler;
+                for (int i = 0; i < tasks.Length; i++)
+                    tasks[i] = wait(entries[i], raceCts.Token);
+
+                int winner = await UniTask.WhenAny(tasks);
+                return entries[winner];
             }
             finally
             {
-                raceCancellationTokenSource.Cancel();
+                raceCts.Cancel();
             }
         }
     }

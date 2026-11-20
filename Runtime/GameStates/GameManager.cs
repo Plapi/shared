@@ -7,7 +7,7 @@ namespace com.Plapamaru.Shared.GameStates
     {
         [SerializeField] private bool _logStateChanges;
 
-        public GameStateMachine Machine { get; } = new GameStateMachine();
+        protected GameStateMachine Machine { get; } = new GameStateMachine();
 
         protected abstract GameStateBase CreateInitialState();
 

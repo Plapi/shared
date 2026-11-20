@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using com.Plapamaru.Shared.Async;
 using Cysharp.Threading.Tasks;
@@ -8,13 +7,35 @@ namespace com.Plapamaru.Shared.GameStates
 {
     public abstract class GameStateBase
     {
+        private UniTaskCompletionSource _backRequest;
+
         public GameStateMachine Machine { get; internal set; }
+
+        protected virtual LoopHandler[] Handlers => null;
 
         protected virtual UniTask OnEnter(CancellationToken cancellationToken) => UniTask.CompletedTask;
         protected virtual UniTask OnExit(CancellationToken cancellationToken) => UniTask.CompletedTask;
         protected virtual UniTask OnPause(CancellationToken cancellationToken) => UniTask.CompletedTask;
         protected virtual UniTask OnResume(CancellationToken cancellationToken) => UniTask.CompletedTask;
-        protected internal virtual bool OnBack() => false;
+
+        protected internal virtual bool OnBack()
+        {
+            var request = _backRequest;
+            _backRequest = null;
+            return request != null && request.TrySetResult();
+        }
+
+        protected UniTask WaitForBack(CancellationToken cancellationToken)
+        {
+            var request = new UniTaskCompletionSource();
+            _backRequest = request;
+            cancellationToken.Register(() =>
+            {
+                if (_backRequest == request)
+                    _backRequest = null;
+            });
+            return request.Task.AttachExternalCancellation(cancellationToken);
+        }
 
         internal abstract UniTask Run(CancellationToken cancellationToken);
 
@@ -23,19 +44,13 @@ namespace com.Plapamaru.Shared.GameStates
         internal UniTask Pause(CancellationToken cancellationToken) => OnPause(cancellationToken);
         internal UniTask Resume(CancellationToken cancellationToken) => OnResume(cancellationToken);
 
-        protected static async UniTask RunLoop(
-            CancellationToken cancellationToken,
-            params (Func<CancellationToken, UniTask> wait, Func<CancellationToken, UniTask<LoopResult>> handle)[] handlers)
+        protected static async UniTask RunLoop(CancellationToken cancellationToken, params LoopHandler[] handlers)
         {
-            var race = new KeyValuePair<Func<CancellationToken, UniTask>, Func<CancellationToken, UniTask<LoopResult>>>[handlers.Length];
-            for (var i = 0; i < handlers.Length; i++)
-                race[i] = new KeyValuePair<Func<CancellationToken, UniTask>, Func<CancellationToken, UniTask<LoopResult>>>(handlers[i].wait, handlers[i].handle);
-
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var handle = await UniTaskRace.Race(race, cancellationToken);
-                if (await handle(cancellationToken) == LoopResult.Break)
+                var winner = await UniTaskRace.Race(handlers, (handler, token) => handler.Wait(token), cancellationToken);
+                if (await winner.Handle(cancellationToken) == LoopResult.Break)
                     return;
             }
         }

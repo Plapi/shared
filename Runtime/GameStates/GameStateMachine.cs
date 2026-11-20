@@ -20,6 +20,7 @@ namespace com.Plapamaru.Shared.GameStates
             }
         }
 
+        private readonly Action<GameStateBase.Context> _initContext;
         private readonly CancellationTokenSource _lifetime = new CancellationTokenSource();
         private readonly List<Entry> _stack = new List<Entry>();
         private readonly List<GameStateBase> _states = new List<GameStateBase>();
@@ -29,18 +30,20 @@ namespace com.Plapamaru.Shared.GameStates
         private bool _runningRoots;
         private bool _disposed;
 
+        public GameStateMachine(Action<GameStateBase.Context> initContext = null)
+        {
+            _initContext = initContext;
+        }
+
         public IReadOnlyList<GameStateBase> States => _states;
         public GameStateBase Current => _states.Count > 0 ? _states[^1] : null;
 
         public event Action StateChanged;
 
-        public void Change(GameStateBase state)
+        public void Change<TContext>(GameState<TContext> state, TContext context = null)
+            where TContext : GameStateBase.Context, new()
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state));
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(GameStateMachine));
-
+            Prepare(state, context);
             _nextRoot = state;
             _root?.Cts.Cancel();
 
@@ -48,13 +51,29 @@ namespace com.Plapamaru.Shared.GameStates
                 RunRoots().Forget();
         }
 
-        public async UniTask Push(GameState state, CancellationToken cancellationToken = default)
+        public UniTask Push<TContext>(GameState<TContext> state, CancellationToken cancellationToken = default)
+            where TContext : GameStateBase.Context, new()
         {
+            return Push(state, null, cancellationToken);
+        }
+
+        public async UniTask Push<TContext>(GameState<TContext> state, TContext context, CancellationToken cancellationToken = default)
+            where TContext : GameStateBase.Context, new()
+        {
+            Prepare(state, context);
             await PushState(state, cancellationToken);
         }
 
-        public async UniTask<TResult> Push<TResult>(GameState<TResult> state, CancellationToken cancellationToken = default)
+        public UniTask<TResult> Push<TContext, TResult>(GameState<TContext, TResult> state, CancellationToken cancellationToken = default)
+            where TContext : GameStateBase.Context, new()
         {
+            return Push(state, null, cancellationToken);
+        }
+
+        public async UniTask<TResult> Push<TContext, TResult>(GameState<TContext, TResult> state, TContext context, CancellationToken cancellationToken = default)
+            where TContext : GameStateBase.Context, new()
+        {
+            Prepare(state, context);
             await PushState(state, cancellationToken);
             return state.Result;
         }
@@ -73,6 +92,21 @@ namespace com.Plapamaru.Shared.GameStates
             _disposed = true;
             _nextRoot = null;
             _lifetime.Cancel();
+        }
+
+        private void Prepare<TContext>(GameStateBase<TContext> state, TContext context)
+            where TContext : GameStateBase.Context, new()
+        {
+            if (state == null)
+                throw new ArgumentNullException(nameof(state));
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(GameStateMachine));
+            if (state.Machine != null)
+                throw new InvalidOperationException($"{state} is already running.");
+
+            context ??= new TContext();
+            _initContext?.Invoke(context);
+            state.SetContext(context);
         }
 
         private async UniTaskVoid RunRoots()
@@ -102,8 +136,6 @@ namespace com.Plapamaru.Shared.GameStates
 
         private async UniTask PushState(GameStateBase state, CancellationToken cancellationToken)
         {
-            if (state == null)
-                throw new ArgumentNullException(nameof(state));
             if (_stack.Count == 0)
                 throw new InvalidOperationException($"No running state to push {state} onto. Use {nameof(Change)} to start the first state.");
 

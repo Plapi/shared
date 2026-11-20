@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace com.Plapamaru.Shared.GameStates
 {
-    public abstract class GameState : GameStateBase
+    public abstract class GameState<TContext> : GameStateBase<TContext> where TContext : GameStateBase.Context
     {
         protected virtual UniTask OnRun(CancellationToken cancellationToken)
         {
@@ -21,7 +21,7 @@ namespace com.Plapamaru.Shared.GameStates
         }
     }
 
-    public abstract class GameState<TResult> : GameStateBase
+    public abstract class GameState<TContext, TResult> : GameStateBase<TContext> where TContext : GameStateBase.Context
     {
         public TResult Result { get; private set; }
 

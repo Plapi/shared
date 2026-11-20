@@ -1,34 +1,32 @@
-using com.Plapamaru.Shared.Singletons;
 using UnityEngine;
 
 namespace com.Plapamaru.Shared.GameStates
 {
-    public abstract class GameManager<T> : MonoBehaviourSingleton<T> where T : GameManager<T>
+    public abstract class GameManager : MonoBehaviour
     {
         [SerializeField] private bool _logStateChanges;
 
-        protected GameStateMachine Machine { get; } = new GameStateMachine();
+        protected GameStateMachine Machine { get; private set; }
 
-        protected abstract GameStateBase CreateInitialState();
+        protected abstract void EnterInitialState();
 
-        protected override void Awake()
+        protected virtual void InitContext(GameStateBase.Context context)
         {
-            base.Awake();
-            if (Instance != this)
-                return;
+        }
 
+        protected virtual void Awake()
+        {
+            Machine = new GameStateMachine(InitContext);
             Machine.StateChanged += OnStateChanged;
         }
 
         protected virtual void Start()
         {
-            if (Instance == this)
-                Machine.Change(CreateInitialState());
+            EnterInitialState();
         }
 
-        protected override void OnDestroy()
+        protected virtual void OnDestroy()
         {
-            base.OnDestroy();
             Machine.StateChanged -= OnStateChanged;
             Machine.Dispose();
         }
@@ -36,7 +34,7 @@ namespace com.Plapamaru.Shared.GameStates
         private void OnStateChanged()
         {
             if (_logStateChanges)
-                Debug.Log($"[{typeof(T).Name}] {(Machine.States.Count > 0 ? string.Join(" > ", Machine.States) : "-")}", this);
+                Debug.Log($"[{GetType().Name}] {(Machine.States.Count > 0 ? string.Join(" > ", Machine.States) : "-")}", this);
         }
     }
 }

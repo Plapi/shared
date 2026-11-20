@@ -7,6 +7,10 @@ namespace com.Plapamaru.Shared.GameStates
 {
     public abstract class GameStateBase
     {
+        public abstract class Context
+        {
+        }
+
         private UniTaskCompletionSource _backRequest;
 
         public GameStateMachine Machine { get; internal set; }
@@ -58,6 +62,16 @@ namespace com.Plapamaru.Shared.GameStates
         public override string ToString()
         {
             return GetType().Name;
+        }
+    }
+
+    public abstract class GameStateBase<TContext> : GameStateBase where TContext : GameStateBase.Context
+    {
+        protected TContext _context;
+
+        internal void SetContext(TContext context)
+        {
+            _context = context;
         }
     }
 }

@@ -1,0 +1,27 @@
+{
+    "name": "Shared.UI.Editor",
+    "rootNamespace": "com.Plapamaru.Shared.UI",
+    "references": [
+        "Shared.UI",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "SHARED_UGUI"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.ugui",
+            "expression": "1.0.0",
+            "define": "SHARED_UGUI"
+        }
+    ],
+    "noEngineReferences": false
+}

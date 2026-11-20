@@ -9,12 +9,8 @@ namespace com.Plapamaru.Shared.UI
     [AddComponentMenu("UI/Press Scale")]
     public class UIPressScale : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
+        [SerializeField] private UIPressScaleSettings _settings;
         [SerializeField] private Transform _target;
-        [SerializeField] private float _pressedScale = 0.9f;
-        [SerializeField] private float _pressDuration = 0.08f;
-        [SerializeField] private UIEase _pressEase = UIEase.OutQuad;
-        [SerializeField] private float _releaseDuration = 0.2f;
-        [SerializeField] private UIEase _releaseEase = UIEase.OutBack;
 
         private Selectable _selectable;
         private Vector3 _baseScale;
@@ -25,6 +21,7 @@ namespace com.Plapamaru.Shared.UI
         private Coroutine _animation;
 
         private Transform Target => _target != null ? _target : transform;
+        private UIPressScaleSettings Settings => _settings != null ? _settings : UIPressScaleSettings.Default;
 
         private void Awake()
         {
@@ -48,7 +45,8 @@ namespace com.Plapamaru.Shared.UI
 
             _pressed = true;
             _pointerId = eventData.pointerId;
-            Animate(_pressedScale, _pressDuration, _pressEase);
+            var settings = Settings;
+            Animate(settings.PressedScale, settings.PressDuration, settings.PressEase);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -57,7 +55,8 @@ namespace com.Plapamaru.Shared.UI
                 return;
 
             _pressed = false;
-            Animate(1f, _releaseDuration, _releaseEase);
+            var settings = Settings;
+            Animate(1f, settings.ReleaseDuration, settings.ReleaseEase);
         }
 
         private void Animate(float to, float duration, UIEase ease)

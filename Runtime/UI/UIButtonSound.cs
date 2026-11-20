@@ -9,11 +9,9 @@ namespace com.Plapamaru.Shared.UI
     [AddComponentMenu("UI/Button Sound")]
     public class UIButtonSound : MonoBehaviour
     {
-        [SerializeField] private UIButtonSoundSettings _settings;
+        [SerializeField] private AudioClip _clip;
 
         private Button _button;
-
-        private UIButtonSoundSettings Settings => _settings != null ? _settings : UIButtonSoundSettings.Default;
 
         private void Awake()
         {
@@ -29,11 +27,8 @@ namespace com.Plapamaru.Shared.UI
 
         private void Play()
         {
-            if (!AudioManager.HasInstance())
-                return;
-
-            var settings = Settings;
-            AudioManager.Instance.PlayEffect(settings.Clip, settings.Volume);
+            if (_clip != null && AudioManager.HasInstance())
+                AudioManager.Instance.PlayEffect(_clip);
         }
     }
 }

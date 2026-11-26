@@ -119,6 +119,7 @@ namespace com.Plapamaru.Shared.Audio
             go.transform.SetParent(transform, false);
             var source = go.AddComponent<AudioSource>();
             source.playOnAwake = false;
+            source.ignoreListenerPause = true;
             source.spatialBlend = 0f;
             source.outputAudioMixerGroup = group;
             return source;

@@ -6,7 +6,6 @@ namespace com.Plapamaru.Shared.Audio
 {
     public class AudioManager : MonoBehaviourSingleton<AudioManager>
     {
-        private const string PrefsPrefix = "Audio.";
         private const float MinVolume = 0.0001f;
 
         [SerializeField] private AudioConfig _config;
@@ -33,7 +32,7 @@ namespace com.Plapamaru.Shared.Audio
             if (_config != null)
             {
                 foreach (var volume in _config.Volumes)
-                    _volumes[volume.Parameter] = PlayerPrefs.GetFloat(PrefsPrefix + volume.Parameter, volume.Default);
+                    _volumes[volume.Parameter] = volume.Default;
             }
         }
 
@@ -83,7 +82,6 @@ namespace com.Plapamaru.Shared.Audio
         {
             volume = Mathf.Clamp01(volume);
             _volumes[parameter] = volume;
-            PlayerPrefs.SetFloat(PrefsPrefix + parameter, volume);
             ApplyVolume(parameter, volume);
         }
 

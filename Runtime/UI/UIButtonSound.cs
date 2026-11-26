@@ -5,24 +5,35 @@ using UnityEngine.UI;
 namespace com.Plapamaru.Shared.UI
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Button))]
     [AddComponentMenu("UI/Button Sound")]
     public class UIButtonSound : MonoBehaviour
     {
         [SerializeField] private AudioClip _clip;
 
         private Button _button;
+        private Toggle _toggle;
 
         private void Awake()
         {
-            _button = GetComponent<Button>();
-            _button.onClick.AddListener(Play);
+            if (TryGetComponent(out _button))
+                _button.onClick.AddListener(Play);
+            else if (TryGetComponent(out _toggle))
+                _toggle.onValueChanged.AddListener(OnToggleChanged);
+            else
+                Debug.LogWarning($"{GetType().Name} needs a Button or a Toggle.", this);
         }
 
         private void OnDestroy()
         {
             if (_button != null)
                 _button.onClick.RemoveListener(Play);
+            if (_toggle != null)
+                _toggle.onValueChanged.RemoveListener(OnToggleChanged);
+        }
+
+        private void OnToggleChanged(bool _)
+        {
+            Play();
         }
 
         private void Play()

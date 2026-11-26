@@ -1,10 +1,17 @@
 using UnityEngine;
+#if SHARED_UGUI
+using com.Plapamaru.Shared.UI;
+#endif
+#if SHARED_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace com.Plapamaru.Shared.GameStates
 {
     public abstract class GameManager : MonoBehaviour
     {
         [SerializeField] private bool _logStateChanges;
+        [SerializeField] private bool _backOnEscape = true;
 
         protected GameStateMachine Machine { get; private set; }
 
@@ -25,10 +32,36 @@ namespace com.Plapamaru.Shared.GameStates
             EnterInitialState();
         }
 
+        protected virtual void Update()
+        {
+            if (_backOnEscape && WasEscapePressed())
+                HandleBack();
+        }
+
         protected virtual void OnDestroy()
         {
             Machine.StateChanged -= OnStateChanged;
             Machine.Dispose();
+        }
+
+        protected virtual bool HandleBack()
+        {
+#if SHARED_UGUI
+            if (UIManager.HasInstance() && UIManager.Instance.HandleBack())
+                return true;
+#endif
+            return Machine.HandleBack();
+        }
+
+        private static bool WasEscapePressed()
+        {
+#if SHARED_INPUT_SYSTEM
+            return Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+#elif ENABLE_LEGACY_INPUT_MANAGER
+            return Input.GetKeyDown(KeyCode.Escape);
+#else
+            return false;
+#endif
         }
 
         private void OnStateChanged()

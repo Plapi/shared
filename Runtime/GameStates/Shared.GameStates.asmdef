@@ -4,7 +4,9 @@
     "references": [
         "Shared",
         "Shared.UniTask",
-        "UniTask"
+        "UniTask",
+        "Shared.UI.Views",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -20,6 +22,16 @@
             "name": "com.cysharp.unitask",
             "expression": "2.0.0",
             "define": "SHARED_UNITASK"
+        },
+        {
+            "name": "com.unity.ugui",
+            "expression": "1.0.0",
+            "define": "SHARED_UGUI"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.0.0",
+            "define": "SHARED_INPUT_SYSTEM"
         }
     ],
     "noEngineReferences": false
